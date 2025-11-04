@@ -9,9 +9,12 @@ import { type Authorization, type Body, BodyType, type HttpNodeType, type Method
 import useKeyValueList from './hooks/use-key-value-list'
 import { transformToBodyPayload } from './utils'
 import useNodeCrud from '@/app/components/workflow/nodes/_base/hooks/use-node-crud'
-import {
-  useNodesReadOnly,
-} from '@/app/components/workflow/hooks'
+import { useNodesReadOnly } from '@/app/components/workflow/hooks'
+
+import {Variable} from '@/app/components/workflow/types'
+import useAvailableEchoVarList from '@/app/components/workflow/nodes/_base/hooks/use-echo-available-var-list'
+
+
 
 const useConfig = (id: string, payload: HttpNodeType) => {
   const { nodesReadOnly: readOnly } = useNodesReadOnly()
@@ -147,6 +150,34 @@ const useConfig = (id: string, payload: HttpNodeType) => {
     setInputs(newInputs)
   }, [inputs, setInputs])
 
+    // add echo message demo
+  const { availableVars } =  useAvailableEchoVarList(id, {
+    onlyLeafNodeVar: false,
+    filterVar: () => true,
+    hideEnv:false,
+    hideChatVar:false,
+  })
+
+  ///////////////////
+  const handleAddEchoVariable = useCallback((payload: Variable) => {
+    const newInputs = produce(inputs, (draft: HttpNodeType) => {
+      //draft.echo_template.variables.push(payload)
+      inputs.echo_template.variables.push(payload)
+      // 为什么draft操作不能对inputs生效？
+      console.info('draft.echo_template.variables.push(payload)')
+    })
+    setInputs(newInputs)
+  }, [inputs, setInputs])
+
+  const handleTemplateChange = useCallback((template: string) => {
+      const newInputs = produce(inputs, (draft: HttpNodeType) => {
+        draft.echo_template.template = template
+        console.info('draft.echo_template.template = template')
+      })
+      setInputs(newInputs)
+  }, [inputs, setInputs])
+
+
   return {
     readOnly,
     isDataReady,
@@ -183,6 +214,11 @@ const useConfig = (id: string, payload: HttpNodeType) => {
     showCurlPanel,
     hideCurlPanel,
     handleCurlImport,
+
+    // echo template
+    availableVars,
+    handleAddEchoVariable,
+    handleTemplateChange,
   }
 }
 

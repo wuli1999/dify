@@ -37,6 +37,10 @@ const nodeDefault: NodeDefault<HttpNodeType> = {
       max_retries: 3,
       retry_interval: 100,
     },
+    echo_template:{
+      variables:[],
+      template:''
+    }
   },
   checkValid(payload: HttpNodeType, t: any) {
     let errorMessages = ''

@@ -17,6 +17,9 @@ import OutputVars, { VarItem } from '@/app/components/workflow/nodes/_base/compo
 import { Settings01 } from '@/app/components/base/icons/src/vender/line/general'
 import { FileArrow01 } from '@/app/components/base/icons/src/vender/line/files'
 import type { NodePanelProps } from '@/app/components/workflow/types'
+import CodeEditor from '@/app/components/workflow/nodes/_base/components/editor/code-editor/editor-support-vars'
+import { CodeLanguage } from '@/app/components/workflow/nodes/code/types'
+import { RiQuestionLine} from '@remixicon/react'
 
 const i18nPrefix = 'workflow.nodes.http'
 
@@ -49,6 +52,10 @@ const Panel: FC<NodePanelProps<HttpNodeType>> = ({
     hideCurlPanel,
     handleCurlImport,
     handleSSLVerifyChange,
+
+    availableVars,
+    handleAddEchoVariable,
+    handleTemplateChange,
   } = useConfig(id, data)
   // To prevent prompt editor in body not update data.
   if (!isDataReady)
@@ -182,6 +189,36 @@ const Panel: FC<NodePanelProps<HttpNodeType>> = ({
           </>
         </OutputVars>
       </div>
+      <div className=''>
+        <>
+        <CodeEditor
+          availableVars={availableVars}
+          varList={inputs.echo_template.variables}
+          onAddVar={handleAddEchoVariable}
+          isInNode
+          readOnly={readOnly}
+          language={CodeLanguage.javascript}
+          title={
+            <div className='uppercase'>{t(`${i18nPrefix}.template.title`)}</div>
+          }
+          headerRight={
+            <div className='flex items-center'>
+              <a
+                className='flex h-[18px] items-center space-x-0.5 text-xs font-normal text-text-tertiary'
+                href="https://jinja.palletsprojects.com/en/3.1.x/templates/"
+                target='_blank'>
+                <span>{t(`${i18nPrefix}.template.supportTip`)}</span>
+                <RiQuestionLine className='h-3 w-3' />
+              </a>
+              <div className='mx-1.5 h-3 w-px bg-divider-regular'></div>
+            </div>
+          }
+          value={inputs.echo_template.template}
+          onChange={handleTemplateChange}
+        />
+        </>
+      </div>
+
       {(isShowCurlPanel && !readOnly) && (
         <CurlPanel
           nodeId={id}
