@@ -66,6 +66,11 @@ export type Branch = {
   name: string
 }
 
+export type EchoTemplate = {
+  variables: Variable[]
+  template: string
+}
+
 export type CommonNodeType<T = {}> = {
   _connectedSourceHandleIds?: string[]
   _connectedTargetHandleIds?: string[]
@@ -104,6 +109,7 @@ export type CommonNodeType<T = {}> = {
   default_value?: DefaultValueForm[]
   credential_id?: string
   _dimmed?: boolean
+  echo_template:EchoTemplate
 } & T & Partial<Pick<ToolDefaultValue, 'provider_id' | 'provider_type' | 'provider_name' | 'tool_name'>>
   & Partial<Pick<DataSourceDefaultValue, 'plugin_id' | 'provider_type' | 'provider_name' | 'datasource_name'>>
 
