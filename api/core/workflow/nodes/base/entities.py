@@ -29,7 +29,6 @@ class VariableSelector(BaseModel):
     """
     Variable Selector.
     """
-
     variable: str
     value_selector: Sequence[str]
 
@@ -125,6 +124,33 @@ class DefaultValue(BaseModel):
 
         return self
 
+#####################
+#from typing import Any
+from pydantic import GetCoreSchemaHandler, Field
+from pydantic_core import core_schema
+
+class EchoTemplateData(BaseModel):
+    template: str = Field(..., description="template string")
+    variables: list[VariableSelector] = Field(default_factory=list)
+
+class EchoTemplate:
+    def __init__(self, template: str, variables: list[VariableSelector] | None = None):
+        self.template:str = template
+        self.variables:list[VariableSelector] = variables or []
+
+    @classmethod
+    def __get_pydantic_core_schema__(
+        cls, source_type: Any, handler: GetCoreSchemaHandler
+    ) -> core_schema.CoreSchema:
+        return handler(EchoTemplateData)
+
+    @classmethod
+    def from_data(cls, data: EchoTemplateData) -> 'EchoTemplate':
+        return cls(template=data.template, vars=data.variables)
+
+    def to_data(self) -> EchoTemplateData:
+        return EchoTemplateData(template=self.template, variables=self.variables)
+#####################
 
 class BaseNodeData(ABC, BaseModel):
     title: str
@@ -133,6 +159,9 @@ class BaseNodeData(ABC, BaseModel):
     error_strategy: ErrorStrategy | None = None
     default_value: list[DefaultValue] | None = None
     retry_config: RetryConfig = RetryConfig()
+
+    echo_template:EchoTemplate |None = None
+
 
     @property
     def default_value_dict(self) -> dict[str, Any]:
