@@ -53,7 +53,7 @@ const Panel: FC<NodePanelProps<HttpNodeType>> = ({
     handleCurlImport,
     handleSSLVerifyChange,
 
-    availableVars,
+    availableEchoVars,
     handleAddEchoVariable,
     handleTemplateChange,
   } = useConfig(id, data)
@@ -192,8 +192,8 @@ const Panel: FC<NodePanelProps<HttpNodeType>> = ({
       <div className=''>
         <>
         <CodeEditor
-          availableVars={availableVars}
-          varList={inputs.echo_template.variables}
+          availableVars={availableEchoVars}
+          varList={inputs.echo_post_template.variables}
           onAddVar={handleAddEchoVariable}
           isInNode
           readOnly={readOnly}
@@ -213,7 +213,7 @@ const Panel: FC<NodePanelProps<HttpNodeType>> = ({
               <div className='mx-1.5 h-3 w-px bg-divider-regular'></div>
             </div>
           }
-          value={inputs.echo_template.template}
+          value={inputs.echo_post_template.template}
           onChange={handleTemplateChange}
         />
         </>

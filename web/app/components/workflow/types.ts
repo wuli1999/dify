@@ -66,9 +66,10 @@ export type Branch = {
   name: string
 }
 
-export type EchoTemplate = {
+export type EchoPostTemplate = {
   variables: Variable[]
   template: string
+  lang:string
 }
 
 export type CommonNodeType<T = {}> = {
@@ -109,7 +110,7 @@ export type CommonNodeType<T = {}> = {
   default_value?: DefaultValueForm[]
   credential_id?: string
   _dimmed?: boolean
-  echo_template:EchoTemplate
+  echo_post_template:EchoPostTemplate
 } & T & Partial<Pick<ToolDefaultValue, 'provider_id' | 'provider_type' | 'provider_name' | 'tool_name'>>
   & Partial<Pick<DataSourceDefaultValue, 'plugin_id' | 'provider_type' | 'provider_name' | 'datasource_name'>>
 

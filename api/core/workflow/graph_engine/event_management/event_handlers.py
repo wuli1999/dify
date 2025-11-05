@@ -293,7 +293,10 @@ class EventHandler:
         Args:
             event: The node succeeded event containing outputs
         """
+        #import traceback
+        #logger.info("current call stack:\n%s", "".join(traceback.format_stack()))
         for variable_name, variable_value in outputs.items():
+            #logger.info(f"_store_node_outputs:{node_id}.{variable_name}")
             self._graph_runtime_state.variable_pool.add((node_id, variable_name), variable_value)
 
     def _update_response_outputs(self, outputs: Mapping[str, object]) -> None:

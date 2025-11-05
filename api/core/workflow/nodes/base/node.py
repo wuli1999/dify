@@ -5,6 +5,7 @@ from functools import singledispatchmethod
 from typing import Any, ClassVar
 from uuid import uuid4
 
+from core.helper.code_executor.code_executor import CodeExecutionError, CodeExecutor, CodeLanguage
 from core.app.entities.app_invoke_entities import InvokeFrom
 from core.workflow.entities import AgentNodeStrategyInit, GraphInitParams, GraphRuntimeState
 from core.workflow.enums import ErrorStrategy, NodeExecutionType, NodeState, NodeType, WorkflowNodeExecutionStatus
@@ -44,7 +45,7 @@ from core.workflow.node_events import (
 from libs.datetime_utils import naive_utc_now
 from models.enums import UserFrom
 
-from .entities import BaseNodeData, RetryConfig
+from .entities import BaseNodeData, RetryConfig, EchoTemplate
 
 logger = logging.getLogger(__name__)
 
@@ -90,6 +91,50 @@ class Node:
         :return:
         """
         raise NotImplementedError
+
+    ##################################################
+    ##################################################   
+    import os
+
+    MAX_TEMPLATE_TRANSFORM_OUTPUT_LENGTH = int(os.environ.get("TEMPLATE_TRANSFORM_MAX_LENGTH", "80000"))
+    def _build_echo_msg(self, template:EchoTemplate, outputs:Mapping[str, any]):
+          # Get variables
+        variables: dict[str, Any] = {}      
+        for variable_selector in template.variables:
+            if len(variable_selector.value_selector) < 2:
+                continue
+            
+            variable_name = variable_selector.value_selector[1]
+            node_id = variable_selector.value_selector[0]
+
+            if node_id == str(self._node_id):
+                variables[variable_name] = outputs.get(variable_name)
+            else:
+                value = self.graph_runtime_state.variable_pool.get(variable_selector.value_selector)
+                variables[variable_name] = value.to_object() if value else None
+
+        # Run code
+        try:
+            result = CodeExecutor.execute_workflow_code_template(
+                language=CodeLanguage.JINJA2, code=template.template, inputs=variables
+            )
+            
+            if len(result["result"]) > self.MAX_TEMPLATE_TRANSFORM_OUTPUT_LENGTH:
+                logger.error(f"Output length exceeds {self.MAX_TEMPLATE_TRANSFORM_OUTPUT_LENGTH} characters")
+                outputs["echo_post_content"] = {"status":WorkflowNodeExecutionStatus.FAILED,
+                                            "error": f"Output length exceeds {self.MAX_TEMPLATE_TRANSFORM_OUTPUT_LENGTH} characters"} 
+            else:
+                outputs["echo_post_content"] = {"content":result["result"],
+                                            "lang":template.lang, 
+                                            "status":WorkflowNodeExecutionStatus.SUCCEEDED}
+
+        except CodeExecutionError as e:
+            logger.error("_build_echo_msg failed:%s", str(e))
+            outputs["echo_post_content"] = {"status":WorkflowNodeExecutionStatus.EXCEPTION,
+                                            "error":str(e)} 
+
+    ##################################################
+    ##################################################   
 
     def run(self) -> Generator[GraphNodeEventBase, None, None]:
         # Generate a single node execution ID to use for all events
@@ -142,6 +187,14 @@ class Node:
 
             # Handle NodeRunResult
             if isinstance(result, NodeRunResult):
+                ##############
+                if result.status == WorkflowNodeExecutionStatus.SUCCEEDED:
+                    if hasattr(self._node_data, "echo_post_template") and self._node_data.echo_post_template:                        
+                        echo_config:EchoTemplate = self._node_data.echo_post_template
+                        if echo_config.template:
+                            self._build_echo_msg(echo_config, result.outputs)
+                ##############
+
                 yield self._convert_node_run_result_to_graph_node_event(result)
                 return
 

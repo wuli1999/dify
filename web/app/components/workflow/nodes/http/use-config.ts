@@ -151,18 +151,18 @@ const useConfig = (id: string, payload: HttpNodeType) => {
   }, [inputs, setInputs])
 
     // add echo message demo
-  const { availableVars } =  useAvailableEchoVarList(id, {
+  const availableEchoVars =  useAvailableEchoVarList(id, {
     onlyLeafNodeVar: false,
     filterVar: () => true,
     hideEnv:false,
     hideChatVar:false,
-  })
+  }).availableVars
 
   ///////////////////
   const handleAddEchoVariable = useCallback((payload: Variable) => {
     const newInputs = produce(inputs, (draft: HttpNodeType) => {
       //draft.echo_template.variables.push(payload)
-      inputs.echo_template.variables.push(payload)
+      inputs.echo_post_template.variables.push(payload)
       // 为什么draft操作不能对inputs生效？
       console.info('draft.echo_template.variables.push(payload)')
     })
@@ -171,7 +171,7 @@ const useConfig = (id: string, payload: HttpNodeType) => {
 
   const handleTemplateChange = useCallback((template: string) => {
       const newInputs = produce(inputs, (draft: HttpNodeType) => {
-        draft.echo_template.template = template
+        draft.echo_post_template.template = template
         console.info('draft.echo_template.template = template')
       })
       setInputs(newInputs)
@@ -216,7 +216,7 @@ const useConfig = (id: string, payload: HttpNodeType) => {
     handleCurlImport,
 
     // echo template
-    availableVars,
+    availableEchoVars,
     handleAddEchoVariable,
     handleTemplateChange,
   }
