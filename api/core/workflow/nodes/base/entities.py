@@ -29,6 +29,7 @@ class VariableSelector(BaseModel):
     """
     Variable Selector.
     """
+
     variable: str
     value_selector: Sequence[str]
 
@@ -124,6 +125,7 @@ class DefaultValue(BaseModel):
 
         return self
 
+<<<<<<< HEAD
 #####################
 from pydantic import GetCoreSchemaHandler, Field
 from pydantic_core import core_schema
@@ -152,6 +154,8 @@ class EchoTemplate:
     def to_data(self) -> EchoTemplateData:
         return EchoTemplateData(template=self.template, variables=self.variables, lang=self.lang)
 #####################
+=======
+>>>>>>> parent of fae326936 (Modify the base Node class to support the echo template.)
 
 class BaseNodeData(ABC, BaseModel):
     title: str
@@ -161,9 +165,12 @@ class BaseNodeData(ABC, BaseModel):
     default_value: list[DefaultValue] | None = None
     retry_config: RetryConfig = RetryConfig()
 
+<<<<<<< HEAD
     echo_post_template:EchoTemplate |None = None
 
 
+=======
+>>>>>>> parent of fae326936 (Modify the base Node class to support the echo template.)
     @property
     def default_value_dict(self) -> dict[str, Any]:
         if self.default_value:

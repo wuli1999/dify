@@ -151,12 +151,12 @@ const useConfig = (id: string, payload: HttpNodeType) => {
   }, [inputs, setInputs])
 
     // add echo message demo
-  const availableEchoVars =  useAvailableEchoVarList(id, {
+  const { availableVars } =  useAvailableEchoVarList(id, {
     onlyLeafNodeVar: false,
     filterVar: () => true,
     hideEnv:false,
     hideChatVar:false,
-  }).availableVars
+  })
 
   ///////////////////
   const handleAddEchoVariable = useCallback((payload: Variable) => {
@@ -216,7 +216,7 @@ const useConfig = (id: string, payload: HttpNodeType) => {
     handleCurlImport,
 
     // echo template
-    availableEchoVars,
+    availableVars,
     handleAddEchoVariable,
     handleTemplateChange,
   }
