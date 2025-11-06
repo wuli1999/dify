@@ -53,7 +53,7 @@ const Panel: FC<NodePanelProps<HttpNodeType>> = ({
     handleCurlImport,
     handleSSLVerifyChange,
 
-    availableEchoVars,
+     availableEchoVars,
     handleAddEchoVariable,
     handleTemplateChange,
   } = useConfig(id, data)
