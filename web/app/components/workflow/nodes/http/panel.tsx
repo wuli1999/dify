@@ -53,11 +53,7 @@ const Panel: FC<NodePanelProps<HttpNodeType>> = ({
     handleCurlImport,
     handleSSLVerifyChange,
 
-<<<<<<< HEAD
-     availableEchoVars,
-=======
     availableVars,
->>>>>>> parent of fae326936 (Modify the base Node class to support the echo template.)
     handleAddEchoVariable,
     handleTemplateChange,
   } = useConfig(id, data)
@@ -196,13 +192,8 @@ const Panel: FC<NodePanelProps<HttpNodeType>> = ({
       <div className=''>
         <>
         <CodeEditor
-<<<<<<< HEAD
-          availableVars={availableEchoVars}
-          varList={inputs.echo_post_template.variables}
-=======
           availableVars={availableVars}
-          varList={inputs.echo_template.variables}
->>>>>>> parent of fae326936 (Modify the base Node class to support the echo template.)
+          varList={inputs.echo_post_template.variables}
           onAddVar={handleAddEchoVariable}
           isInNode
           readOnly={readOnly}
