@@ -125,12 +125,17 @@ class DefaultValue(BaseModel):
         return self
 
 #####################
+<<<<<<< HEAD
+=======
+#from typing import Any
+>>>>>>> fae326936bf33b9452d1926ae48b95305c45fceb
 from pydantic import GetCoreSchemaHandler, Field
 from pydantic_core import core_schema
 
 class EchoTemplateData(BaseModel):
     template: str = Field(..., description="template string")
     variables: list[VariableSelector] = Field(default_factory=list)
+<<<<<<< HEAD
     lang: str=Field(..., description="template language")
 
 class EchoTemplate:
@@ -138,6 +143,13 @@ class EchoTemplate:
         self.template:str = template
         self.variables:list[VariableSelector] = variables or []
         self.lang:str = lang
+=======
+
+class EchoTemplate:
+    def __init__(self, template: str, variables: list[VariableSelector] | None = None):
+        self.template:str = template
+        self.variables:list[VariableSelector] = variables or []
+>>>>>>> fae326936bf33b9452d1926ae48b95305c45fceb
 
     @classmethod
     def __get_pydantic_core_schema__(
@@ -147,10 +159,17 @@ class EchoTemplate:
 
     @classmethod
     def from_data(cls, data: EchoTemplateData) -> 'EchoTemplate':
+<<<<<<< HEAD
         return cls(template=data.template, variables=data.variables, lang=data.lang)
 
     def to_data(self) -> EchoTemplateData:
         return EchoTemplateData(template=self.template, variables=self.variables, lang=self.lang)
+=======
+        return cls(template=data.template, vars=data.variables)
+
+    def to_data(self) -> EchoTemplateData:
+        return EchoTemplateData(template=self.template, variables=self.variables)
+>>>>>>> fae326936bf33b9452d1926ae48b95305c45fceb
 #####################
 
 class BaseNodeData(ABC, BaseModel):
@@ -161,7 +180,11 @@ class BaseNodeData(ABC, BaseModel):
     default_value: list[DefaultValue] | None = None
     retry_config: RetryConfig = RetryConfig()
 
+<<<<<<< HEAD
     echo_post_template:EchoTemplate |None = None
+=======
+    echo_template:EchoTemplate |None = None
+>>>>>>> fae326936bf33b9452d1926ae48b95305c45fceb
 
 
     @property

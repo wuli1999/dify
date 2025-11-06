@@ -5,6 +5,10 @@ from functools import singledispatchmethod
 from typing import Any, ClassVar
 from uuid import uuid4
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> fae326936bf33b9452d1926ae48b95305c45fceb
 from core.helper.code_executor.code_executor import CodeExecutionError, CodeExecutor, CodeLanguage
 from core.app.entities.app_invoke_entities import InvokeFrom
 from core.workflow.entities import AgentNodeStrategyInit, GraphInitParams, GraphRuntimeState
@@ -95,6 +99,7 @@ class Node:
     ##################################################
     ##################################################   
     import os
+<<<<<<< HEAD
 
     MAX_TEMPLATE_TRANSFORM_OUTPUT_LENGTH = int(os.environ.get("TEMPLATE_TRANSFORM_MAX_LENGTH", "80000"))
     def _build_echo_msg(self, template:EchoTemplate, outputs:Mapping[str, any]):
@@ -113,11 +118,28 @@ class Node:
                 value = self.graph_runtime_state.variable_pool.get(variable_selector.value_selector)
                 variables[variable_name] = value.to_object() if value else None
 
+=======
+    from .entities import EchoTemplate
+    MAX_TEMPLATE_TRANSFORM_OUTPUT_LENGTH = int(os.environ.get("TEMPLATE_TRANSFORM_MAX_LENGTH", "80000"))
+    def _build_echo_msg(self, template:EchoTemplate, outputs:Mapping[str, any]):
+          # Get variables
+        variables: dict[str, Any] = {}
+     
+        for variable_selector in template.variables:
+            variable_name = variable_selector.variable
+            node_id = variable_selector.value_selector[0] if variable_selector.value_selector else None
+            if node_id == str(self._node_id):
+                variables[variable_name] = outputs[variable_name]
+            else:
+                value = self.graph_runtime_state.variable_pool.get(variable_selector.value_selector)
+                variables[variable_name] = value.to_object() if value else None
+>>>>>>> fae326936bf33b9452d1926ae48b95305c45fceb
         # Run code
         try:
             result = CodeExecutor.execute_workflow_code_template(
                 language=CodeLanguage.JINJA2, code=template.template, inputs=variables
             )
+<<<<<<< HEAD
             
             if len(result["result"]) > self.MAX_TEMPLATE_TRANSFORM_OUTPUT_LENGTH:
                 logger.error(f"Output length exceeds {self.MAX_TEMPLATE_TRANSFORM_OUTPUT_LENGTH} characters")
@@ -133,6 +155,15 @@ class Node:
             outputs["echo_post_content"] = {"status":WorkflowNodeExecutionStatus.EXCEPTION,
                                             "error":str(e)} 
 
+=======
+            outputs["echoMsg"] = result["result"]            
+
+        except CodeExecutionError as e:
+            logger.error("_build_echo_msg failed:%s", str(e))
+ 
+        if len(result["result"]) > self.MAX_TEMPLATE_TRANSFORM_OUTPUT_LENGTH:
+            logger.error(f"Output length exceeds {self.MAX_TEMPLATE_TRANSFORM_OUTPUT_LENGTH} characters")
+>>>>>>> fae326936bf33b9452d1926ae48b95305c45fceb
     ##################################################
     ##################################################   
 
@@ -188,6 +219,7 @@ class Node:
             # Handle NodeRunResult
             if isinstance(result, NodeRunResult):
                 ##############
+<<<<<<< HEAD
                 if result.status == WorkflowNodeExecutionStatus.SUCCEEDED:
                     if hasattr(self._node_data, "echo_post_template") and self._node_data.echo_post_template:                        
                         echo_config:EchoTemplate = self._node_data.echo_post_template
@@ -195,6 +227,12 @@ class Node:
                             self._build_echo_msg(echo_config, result.outputs)
                 ##############
 
+=======
+                if(result.status == WorkflowNodeExecutionStatus.SUCCEEDED and self._node_data.echo_template):
+                    self._build_echo_msg(self._node_data.echo_template, result.outputs)                   
+                ##############
+                
+>>>>>>> fae326936bf33b9452d1926ae48b95305c45fceb
                 yield self._convert_node_run_result_to_graph_node_event(result)
                 return
 
