@@ -5,10 +5,7 @@ from functools import singledispatchmethod
 from typing import Any, ClassVar
 from uuid import uuid4
 
-<<<<<<< HEAD
 from core.helper.code_executor.code_executor import CodeExecutionError, CodeExecutor, CodeLanguage
-=======
->>>>>>> parent of fae326936 (Modify the base Node class to support the echo template.)
 from core.app.entities.app_invoke_entities import InvokeFrom
 from core.workflow.entities import AgentNodeStrategyInit, GraphInitParams, GraphRuntimeState
 from core.workflow.enums import ErrorStrategy, NodeExecutionType, NodeState, NodeType, WorkflowNodeExecutionStatus
@@ -95,7 +92,6 @@ class Node:
         """
         raise NotImplementedError
 
-<<<<<<< HEAD
     ##################################################
     ##################################################   
     import os
@@ -140,8 +136,6 @@ class Node:
     ##################################################
     ##################################################   
 
-=======
->>>>>>> parent of fae326936 (Modify the base Node class to support the echo template.)
     def run(self) -> Generator[GraphNodeEventBase, None, None]:
         # Generate a single node execution ID to use for all events
         if not self._node_execution_id:
@@ -193,7 +187,6 @@ class Node:
 
             # Handle NodeRunResult
             if isinstance(result, NodeRunResult):
-<<<<<<< HEAD
                 ##############
                 if result.status == WorkflowNodeExecutionStatus.SUCCEEDED:
                     if hasattr(self._node_data, "echo_post_template") and self._node_data.echo_post_template:                        
@@ -201,9 +194,6 @@ class Node:
                         if echo_config.template:
                             self._build_echo_msg(echo_config, result.outputs)
                 ##############
-
-=======
->>>>>>> parent of fae326936 (Modify the base Node class to support the echo template.)
                 yield self._convert_node_run_result_to_graph_node_event(result)
                 return
 
