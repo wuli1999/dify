@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field
 
 from core.workflow.enums import NodeType
 from core.workflow.node_events import NodeRunResult
+from collections.abc import Mapping
 
 
 class GraphEngineEvent(BaseModel):
@@ -26,6 +27,8 @@ class GraphNodeEventBase(GraphEngineEvent):
     node_version: str = "1"
     node_run_result: NodeRunResult = Field(default_factory=NodeRunResult)
 
+    # extended attribute
+    xattr: Mapping[str, object] = Field(default_factory=dict)
 
 class GraphAgentNodeEventBase(GraphNodeEventBase):
     pass

@@ -60,7 +60,6 @@ from core.workflow.workflow_entry import WorkflowEntry
 from models.enums import UserFrom
 from models.workflow import Workflow
 
-
 class WorkflowBasedAppRunner:
     def __init__(
         self,
@@ -399,6 +398,7 @@ class WorkflowBasedAppRunner:
                     agent_strategy=event.agent_strategy,
                     provider_type=event.provider_type,
                     provider_id=event.provider_id,
+                    xattr=event.xattr
                 )
             )
         elif isinstance(event, NodeRunSucceededEvent):
@@ -407,6 +407,7 @@ class WorkflowBasedAppRunner:
             process_data = node_run_result.process_data
             outputs = node_run_result.outputs
             execution_metadata = node_run_result.metadata
+
             self._publish_event(
                 QueueNodeSucceededEvent(
                     node_execution_id=event.id,
@@ -419,6 +420,7 @@ class WorkflowBasedAppRunner:
                     execution_metadata=execution_metadata,
                     in_iteration_id=event.in_iteration_id,
                     in_loop_id=event.in_loop_id,
+                    xattr=event.xattr
                 )
             )
         elif isinstance(event, NodeRunFailedEvent):

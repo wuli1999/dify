@@ -152,6 +152,7 @@ class EchoTemplate:
 
     def to_data(self) -> EchoTemplateData:
         return EchoTemplateData(template=self.template, variables=self.variables, lang=self.lang)
+
 #####################
 
 class BaseNodeData(ABC, BaseModel):
@@ -162,7 +163,9 @@ class BaseNodeData(ABC, BaseModel):
     default_value: list[DefaultValue] | None = None
     retry_config: RetryConfig = RetryConfig()
 
+    '''custom extent properties must declare'''
     echo_post_template:EchoTemplate |None = None
+    echo_pre_template:EchoTemplate |None = None
 
     @property
     def default_value_dict(self) -> dict[str, Any]:

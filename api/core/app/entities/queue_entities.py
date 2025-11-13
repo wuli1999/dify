@@ -54,6 +54,7 @@ class AppQueueEvent(BaseModel):
     """
 
     event: QueueEvent
+    xattr:Mapping[str, Any] = Field(default_factory=dict)
 
 
 class QueueLLMChunkEvent(AppQueueEvent):

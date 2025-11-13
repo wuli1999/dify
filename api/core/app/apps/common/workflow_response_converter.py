@@ -49,7 +49,6 @@ from models import (
 )
 from services.variable_truncator import VariableTruncator
 
-
 class WorkflowResponseConverter:
     def __init__(
         self,
@@ -162,6 +161,7 @@ class WorkflowResponseConverter:
                 loop_id=event.in_loop_id,
                 parallel_run_id=event.parallel_mode_run_id,
                 agent_strategy=event.agent_strategy,
+                xattr = event.xattr,
             ),
         )
 
@@ -226,6 +226,7 @@ class WorkflowResponseConverter:
                 parallel_id=event.parallel_id,
                 iteration_id=event.in_iteration_id,
                 loop_id=event.in_loop_id,
+                xattr=event.xattr
             ),
         )
 

@@ -265,6 +265,7 @@ class NodeStartStreamResponse(StreamResponse):
         loop_id: str | None = None
         parallel_run_id: str | None = None
         agent_strategy: AgentNodeStrategyInit | None = None
+        xattr:Mapping[str, Any] | None = None
 
     event: StreamEvent = StreamEvent.NODE_STARTED
     workflow_run_id: str
@@ -330,6 +331,7 @@ class NodeFinishStreamResponse(StreamResponse):
         parent_parallel_start_node_id: str | None = None
         iteration_id: str | None = None
         loop_id: str | None = None
+        xattr:Mapping[str, Any] | None = None
 
     event: StreamEvent = StreamEvent.NODE_FINISHED
     workflow_run_id: str
