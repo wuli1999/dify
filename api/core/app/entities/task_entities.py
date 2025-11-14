@@ -292,6 +292,7 @@ class NodeStartStreamResponse(StreamResponse):
                 "parent_parallel_start_node_id": self.data.parent_parallel_start_node_id,
                 "iteration_id": self.data.iteration_id,
                 "loop_id": self.data.loop_id,
+                "xattr":self.data.xattr,
             },
         }
 
@@ -365,6 +366,7 @@ class NodeFinishStreamResponse(StreamResponse):
                 "parent_parallel_start_node_id": self.data.parent_parallel_start_node_id,
                 "iteration_id": self.data.iteration_id,
                 "loop_id": self.data.loop_id,
+                "xattr":self.data.xattr
             },
         }
 
