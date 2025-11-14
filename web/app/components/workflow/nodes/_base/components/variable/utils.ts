@@ -347,6 +347,10 @@ const formatItem = (
 
         return varRes
       })
+      res.vars.push({
+        variable: 'sys.time',
+        type: VarType.string,
+      })
       if (isChatMode) {
         res.vars.push({
           variable: 'sys.query',
@@ -1896,8 +1900,7 @@ export const getNodeOutputVars = (
   const { data, id } = node
   const { type } = data
   let res: ValueSelector[] = []
-
-  switch (type) {
+   switch (type) {
     case BlockEnum.Start: {
       const { variables } = data as StartNodeType
       res = variables.map((v) => {

@@ -112,6 +112,17 @@ const Panel: FC<NodePanelProps<StartNodeType>> = ({
                   </>
                 )
               }
+             <VarItem
+                readonly
+                payload={{
+                  variable: 'sys.time',
+                } as any}
+                rightContent={
+                  <div className='text-xs font-normal text-text-tertiary'>
+                    String
+                  </div>
+                }
+              />
               <VarItem
                 readonly
                 payload={{

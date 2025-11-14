@@ -154,6 +154,11 @@ class VariablePool(BaseModel):
         node_id, name = self._selector_to_keys(selector)
         segment: Segment | None = self.variable_dictionary[node_id].get(name)
 
+        if node_id == "sys" and name == "time":
+            import datetime
+            now = datetime.datetime.now(datetime.UTC).replace(tzinfo=None).strftime("%Y-%m-%d %H:%M:%S")
+            return variable_factory.build_segment(now)
+
         if segment is None:
             return None
 
